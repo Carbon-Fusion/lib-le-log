@@ -6,7 +6,7 @@
 #include <string.h>
 
 #ifndef LOG_LOC
- #define LOG_LOC "/sdcard/lible.log"
+ #define LOG_LOC "/cache/lible.log"
 #endif
 
 int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
