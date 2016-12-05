@@ -5,7 +5,9 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define LOG_LOC "/sdcard/lible.log"
+#ifndef LOG_LOC
+ #define LOG_LOC "/sdcard/lible.log"
+#endif
 
 int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
 {
