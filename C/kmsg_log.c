@@ -9,7 +9,7 @@
  #define LOG_LOC "/cache/lible.log"
 #endif
 
-int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
+int klog(int level, char * a )
 {
 
  char *buf = malloc(sizeof(char) * 256);
