@@ -5,52 +5,55 @@
 #include <fcntl.h>
 #include <string.h>
 
+#define ALT_LOG "/sdcard/lible.log"
+
 int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
 {
+
+ char *buf = malloc(sizeof(char) * 256);
+ int ret = -1; 
+
   // Write to kmsg if possibe.
  int kmsg = open("/dev/kmsg", O_WRONLY);
- int ret = -1; 
   if (kmsg > 0) // Trying to open KMSG, if it doesn't return any error, continue executing the code.
   {
-    char *buf_kmsg = malloc(sizeof(char) * 256);
+    strcpy(buf,"Test\n");
 
-    strcpy(buf_kmsg,"Test");
-    int size_in_buf = strlen(buf_kmsg) ;
-
-    ret = write(kmsg,buf_kmsg,size_in_buf); // Write "Test" to KMSG
+    ret = write(kmsg,buf,
+			strlen(buf)); // Write "Test" to KMSG
     close(kmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
   } else {
-
-
     /*
       Now if the file doesn't exists
       we would open another the file
       on sdcard to transmit our msg
     */
-    int sdkmsg = access("/sdcard/lible.log", F_OK ) ;  // Check if the file exists
 
-    if (sdkmsg == -1) {  // If it doesn't exist, create it
-      sdkmsg = open("/sdcard/lible.log", O_CREAT);
+	int sdkmsg; 
 
-      close(sdkmsg); // Close the discriptor with the value of "O_CREAT"
-    }
+    if (access(ALT_LOG, F_OK ) == -1) {  // Check if the file exists
+      sdkmsg = open(ALT_LOG, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open to write
+
+    } else {
+		/*
+		* TODO: Make better file checks
+		*/
+	  sdkmsg = open(ALT_LOG, O_APPEND); // Else, assume file already exist: Open to append. 
+	}
 
     /*
       Checking is done, now we will write to the KMSG
     */
-      char *buf_sd = malloc(sizeof(char) * 256);
 
-      sdkmsg = open("/sdcard/lible.log",O_WRONLY); // OPEN TO WRITE
+      strcpy(buf,"ERROR: COULD NOT OPEN KMSG PLEASE FIX");
 
-      strcpy(buf_sd,"ERROR: COULD NOT OPEN KMSG PLEASE FIX");
-      int size_in_buf = strlen(buf_sd);
-
-
-      ret = write(sdkmsg,buf_sd,size_in_buf);// write errors
+      ret = write(sdkmsg,buf,
+				strlen(buf));// write errors
 
       close(sdkmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
 
     }
 
+	free(buf); //empty buf memory
 	return ret;
 }
