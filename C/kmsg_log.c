@@ -5,7 +5,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define ALT_LOG "/sdcard/lible.log"
+#define LOG_LOC "/sdcard/lible.log"
 
 int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
 {
@@ -27,14 +27,14 @@ int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
     */
 	int sdkmsg; 
 
-    if (access(ALT_LOG, F_OK ) == -1) {  // Check if the file exists.
-      sdkmsg = open(ALT_LOG, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open it to write to it.
+    if (access(LOG_LOC, F_OK ) == -1) {  // Check if the file exists.
+      sdkmsg = open(LOG_LOC, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open it to write to it.
 
     } else {
 		/*
 		* TODO: Make better file checks.
 		*/
-	  sdkmsg = open(ALT_LOG, O_APPEND); // Else, assume file already exist: Open to append. 
+	  sdkmsg = open(LOG_LOC, O_APPEND); // Else, assume file already exist: Open to append. 
 	}
 
     /*
