@@ -9,7 +9,7 @@
  #define LOG_LOC "/cache/lible.log"
 #endif
 
-int klog(int level, char *a )
+int klog(int level, char *msg )
 {
 
  char *buf = malloc(sizeof(char) * 256);
@@ -19,7 +19,7 @@ int klog(int level, char *a )
  int outbuf = open("/dev/kmsg", O_WRONLY);
   if (outbuf > 0) // Trying to open KMSG, 
   {
-    strcpy(buf,"Test\n");
+    strcpy(buf,*msg);
 
   } else { //If kmesg don't open write to sd
     /*
