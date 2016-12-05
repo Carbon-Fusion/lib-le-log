@@ -19,39 +19,36 @@ int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
   {
     strcpy(buf,"Test\n");
 
-    ret = write(kmsg, buf, strlen(buf) ); // Write "Test" to KMSG
-    close(kmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
+    ret = write(kmsg, buf, strlen(buf) ); // Write to KMSG.
+    close(kmsg); // Close the file discriptor to avoid any leaks.
   } else {
     /*
-      Now if the file doesn't exists
-      we would open another the file
-      on sdcard to transmit our msg
+      Now if the file doesn't exists, we would open another file on the sdcard to transmit our KMSG.
     */
-
 	int sdkmsg; 
 
-    if (access(ALT_LOG, F_OK ) == -1) {  // Check if the file exists
-      sdkmsg = open(ALT_LOG, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open to write
+    if (access(ALT_LOG, F_OK ) == -1) {  // Check if the file exists.
+      sdkmsg = open(ALT_LOG, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open it to write to it.
 
     } else {
 		/*
-		* TODO: Make better file checks
+		* TODO: Make better file checks.
 		*/
 	  sdkmsg = open(ALT_LOG, O_APPEND); // Else, assume file already exist: Open to append. 
 	}
 
     /*
-      Checking is done, now we will write to the KMSG
+      Checking is done, now we will write to the KMSG.
     */
 
       strcpy(buf,"ERROR: COULD NOT OPEN KMSG PLEASE FIX");
 
-      ret = write(sdkmsg, buf, strlen(buf) );// write errors
+      ret = write(sdkmsg, buf, strlen(buf) );// Write any errors.
 
-      close(sdkmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
+      close(sdkmsg); // Close the file discriptor to avoid any leaks.
 
     }
 
-	free(buf); //empty buf memory
+	free(buf); // Empty buf memory.
 	return ret;
 }
