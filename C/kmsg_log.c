@@ -19,8 +19,7 @@ int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
   {
     strcpy(buf,"Test\n");
 
-    ret = write(kmsg,buf,
-			strlen(buf)); // Write "Test" to KMSG
+    ret = write(kmsg, buf, strlen(buf) ); // Write "Test" to KMSG
     close(kmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
   } else {
     /*
@@ -47,8 +46,7 @@ int klog(__attribute__((unused)) int level,__attribute__((unused)) char * a )
 
       strcpy(buf,"ERROR: COULD NOT OPEN KMSG PLEASE FIX");
 
-      ret = write(sdkmsg,buf,
-				strlen(buf));// write errors
+      ret = write(sdkmsg, buf, strlen(buf) );// write errors
 
       close(sdkmsg); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
 
