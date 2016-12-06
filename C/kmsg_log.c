@@ -51,7 +51,7 @@ int klog(char *msg)
 	return ret;
 }
 
-	int warn(char *warning) 
+	int logwarn(char *warning) 
 	{ 
 		char *warn ="Warning! : "  ;
 		strcat(*warn,*warning);
@@ -59,10 +59,24 @@ int klog(char *msg)
 		return(ret);
 	}	
 
-	int error(char *error) 
+	int logerror(char *error) 
 	{ 
-		char *tag ="Error! : "  ;
-		strcat(*tag,error);
-		int ret = klog(*tag);
+		char *error_tag ="Error! : "  ;
+		strcat(*error_tag,error);
+		int ret = klog(*error_tag);
 		return(ret);
 	}	
+	int logdebug (char *debug_msg)
+	{
+		char *debug_tag = "Debug : ";
+		strcat(*debug_tag,debug_msg);
+		int ret = klog(*debug_tag);
+		return(ret);
+	}
+	int loginfo (char *info)
+	{
+		char *info_tag = "Info : ";
+		strcat(*info_tag,info);
+		int ret = klog(*info_tag);
+		return(ret);
+	}
