@@ -10,8 +10,6 @@ This file is part of lib-le-log
 Copyright © of Carbon-Fusion (www.github.com/Carbon-Fusion)
 */
 
-
-*/
 /*
  * Written / Contributed by 
  * DevUt (www.github.com/DevUt)
