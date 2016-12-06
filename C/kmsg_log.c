@@ -9,7 +9,8 @@
  #define LOG_LOC "/cache/lible.log"
 #endif
 
-int klog(int level, char *msg )
+
+int klog(char *msg)
 {
 
  char *buf = malloc(sizeof(char) * 256);
@@ -19,8 +20,7 @@ int klog(int level, char *msg )
  int outbuf = open("/dev/kmsg", O_WRONLY);
   if (outbuf > 0) // Trying to open KMSG, 
   {
-    strcpy(buf,*msg);
-
+    strcpy(buf,*msg);    
   } else { //If kmesg don't open write to sd
     /*
       Now if the file doesn't exists, we would open another file on the sdcard to transmit our KMSG.
@@ -39,7 +39,7 @@ int klog(int level, char *msg )
       Checking is done, now we will write to the KMSG.
     */
 
-      strcpy(buf,"ERROR: COULD NOT OPEN KMSG PLEASE FIX");
+      strcpy(buf,"COULD NOT OPEN KMSG PLEASE FIX");
 
     }
 
@@ -50,3 +50,19 @@ int klog(int level, char *msg )
 	free(buf); // Empty buf memory.
 	return ret;
 }
+
+	int warn(char *warning) 
+	{ 
+		char *warn ="Warning! : "  ;
+		strcat(*warn,*warning);
+		int ret = klog(*warn);
+		return(ret);
+	}	
+
+	int error(char *error) 
+	{ 
+		char *tag ="Error! : "  ;
+		strcat(*tag,error);
+		int ret = klog(*tag);
+		return(ret);
+	}	
