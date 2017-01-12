@@ -23,13 +23,11 @@ Copyright © of Carbon-Fusion (www.github.com/Carbon-Fusion)
 * DevUt (www.github.com/DevUt)
 * naiylk (www.github.com/nailyk-fr)
 */
-
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/stat.h>
+#include <stdarg.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 
 #ifndef LOG_LOC
@@ -37,7 +35,7 @@ Copyright © of Carbon-Fusion (www.github.com/Carbon-Fusion)
 #endif
 
 
-int klog(const char *msg, ...)
+int klog(char *msg, ...)
 {
  // Combine all the arguments into a string
  va_list arg; // Declare the arg as the list
@@ -53,7 +51,7 @@ int ret = -1; // The return value to have a default error
 int outbuf = open("/dev/kmsg", O_WRONLY);
  if (outbuf > 0) // Trying to open KMSG,
  {
-   strcpy(buf,*msg);
+   strcpy(buf,msg);
  } else { //If kmesg don't open write to sd
    /*
      Now if the file doesn't exists, we would open another file on the sdcard to transmit our KMSG.
@@ -89,14 +87,15 @@ int outbuf = open("/dev/kmsg", O_WRONLY);
    // Combine all the arguments into a string
    va_list arg; // Declare the arg as the list
    va_start(arg,warning); // start reading
-   char *var_combined ; // This variable contains string when it has been "stiched" or combined or strcat'd together
+   char *var_combined  ; // This variable contains string when it has been "stiched" or combined or strcat'd together
    vasprintf(&var_combined , warning, arg); // Magic HAppens ! vasprintf returns the strcat'd string and stores into var_combined
    va_end(arg); // End the list
 
-   char *warn ="Warning! : "  ;
-   strcat(*warn,*var_combined);
-   int ret = klog(*warn);
+   char warn[256] ="Warning! : "  ;
+   strcat(warn,var_combined);
+   int ret = klog(warn);
    return(ret);
+
  }
 
  int logerror(char *error, ...)
@@ -108,9 +107,9 @@ int outbuf = open("/dev/kmsg", O_WRONLY);
    vasprintf(&var_combined , error, arg); // Magic HAppens ! vasprintf returns the strcat'd string and stores into var_combined
    va_end(arg); // End the list
 
-   char *error_tag ="Error! : "  ;
-   strcat(*error_tag,var_combined);
-   int ret = klog(*error_tag);
+   char error_tag[256] ="Error! : "  ;
+   strcat(error_tag,var_combined);
+   int ret = klog(error_tag);
    return(ret);
  }
  int logdebug (char *debug_msg, ...)
@@ -122,9 +121,9 @@ int outbuf = open("/dev/kmsg", O_WRONLY);
    vasprintf(&var_combined , debug_msg, arg); // Magic HAppens ! vasprintf returns the strcat'd string and stores into var_combined
    va_end(arg); // End the list
 
-   char *debug_tag = "Debug : ";
-   strcat(*debug_tag,var_combined);
-   int ret = klog(*debug_tag);
+   char debug_tag[256] = "Debug : ";
+   strcat(debug_tag,var_combined);
+   int ret = klog(debug_tag);
    return(ret);
  }
  int loginfo (char *info, ...)
@@ -136,8 +135,8 @@ int outbuf = open("/dev/kmsg", O_WRONLY);
    vasprintf(&var_combined , info, arg); // Magic HAppens ! vasprintf returns the strcat'd string and stores into var_combined
    va_end(arg); // End the list
 
-   char *info_tag = "Info : ";
-   strcat(*info_tag,var_combined);
-   int ret = klog(*info_tag);
+   char info_tag[256] = "Info : ";
+   strcat(info_tag,var_combined);
+   int ret = klog(info_tag);
    return(ret);
  }
