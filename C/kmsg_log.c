@@ -1,6 +1,6 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
@@ -14,13 +14,13 @@ int klog(char *msg)
 {
 
  char *buf = malloc(sizeof(char) * 256);
- int ret = -1; 
+ int ret = -1;
 
   // Write to kmsg if possibe.
  int outbuf = open("/dev/kmsg", O_WRONLY);
-  if (outbuf > 0) // Trying to open KMSG, 
+  if (outbuf > 0) // Trying to open KMSG,
   {
-    strcpy(buf,*msg);    
+    strcpy(buf,*msg);
   } else { //If kmesg don't open write to sd
     /*
       Now if the file doesn't exists, we would open another file on the sdcard to transmit our KMSG.
@@ -32,7 +32,7 @@ int klog(char *msg)
 		/*
 		* TODO: Make better file checks.
 		*/
-	  outbuf = open(LOG_LOC, O_APPEND); // Else, assume file already exist: Open to append. 
+	  outbuf = open(LOG_LOC, O_APPEND); // Else, assume file already exist: Open to append.
 	}
 
     /*
@@ -51,21 +51,21 @@ int klog(char *msg)
 	return ret;
 }
 
-	int logwarn(char *warning) 
-	{ 
+	int logwarn(char *warning)
+	{
 		char *warn ="Warning! : "  ;
 		strcat(*warn,*warning);
 		int ret = klog(*warn);
 		return(ret);
-	}	
+	}
 
-	int logerror(char *error) 
-	{ 
+	int logerror(char *error)
+	{
 		char *error_tag ="Error! : "  ;
 		strcat(*error_tag,error);
 		int ret = klog(*error_tag);
 		return(ret);
-	}	
+	}
 	int logdebug (char *debug_msg)
 	{
 		char *debug_tag = "Debug : ";
