@@ -8,102 +8,64 @@
 #ifndef LOG_LOC
  #define LOG_LOC "/cache/lible.log"
 #endif
-
-
-int klog(char *msg)
+/*
+  This is the main function "klog"
+  it takes the the log level
+  ==================================== \
+   label  | loglevel | message         /
+  ==================================== \
+  | Info  | 0        |  Info :         /
+  | Warn  | 1        |  Warn :         \
+  | Error | 2        |  Error :        /
+  | Debug | 3        |  Debug :        \
+  ==================================== /
+  then opens the /dev/kmsg or LOG_LOC
+  if it cant acces the location
+  it tries to open the LOG_LOC
+  and print COULD NOT OPEN KMSG PLEASE FIX
+*/
+int klog(int level, char *msg)
 {
 
- char *buf = malloc(256);
  int ret = -1;
+ char tag [256];
 
-  // Write to kmsg if possibe.
  int outbuf = open("/dev/kmsg", O_WRONLY);
-  if (outbuf > 0) // Trying to open KMSG,
+  if (outbuf > 0)
   {
-    strcpy(buf,msg);
-  } else { //If kmesg don't open write to sd
-    /*
-      Now if the file doesn't exists, we would open another file on the sdcard to transmit our KMSG.
-    */
-    if (access(LOG_LOC, F_OK ) == -1) {  // Check if the file exists.
-      outbuf = open(LOG_LOC, O_CREAT | O_WRONLY); // If it doesn't exist, create it and open it to write to it.
+    switch (level)
+     {
+      case 0 : tag = "Info :" ;
+                strcat(tag,msg);
+                break ;
 
+      case 1 : tag = "Warn :";
+                strcat(tag,msg);
+              break ;
+      case 2 : tag = "Error :"
+                strcat(tag,msg);
+              break ;
+      case 3 : tag = "Debug :"
+                strcat(tag,msg);
+              break ;
+      default : tag = "Error : Unknown log level "
+                break;
+    }
+
+
+  } else {
+    if (access(LOG_LOC, F_OK ) == -1) {
+      outbuf = open(LOG_LOC, O_CREAT | O_WRONLY);
     } else {
 		/*
 		* TODO: Make better file checks.
 		*/
-	  outbuf = open(LOG_LOC, O_APPEND); // Else, assume file already exist: Open to append.
-	}
-
-    /*
-      Checking is done, now we will write to the KMSG.
-    */
-
-      strcpy(buf,"COULD NOT OPEN KMSG PLEASE FIX");
-
+	  outbuf = open(LOG_LOC, O_APPEND);
+      strcpy(tag,"COULD NOT OPEN KMSG PLEASE FIX");
     }
+  }
+	ret = write(outbuf, tag, strlen(tag) );
+	close(outbuf);
 
-	ret = write(outbuf, buf, strlen(buf) ); // Write "Test" to KMSG
-
-	close(outbuf); // CLOSE THE FILE DISCRIPTOR TO AVOID LEAK ;
-
-	free(buf); // Empty buf memory.
 	return ret;
 }
-
-/*
-  This functions prefixes the Warning label
-  to the real message and sends it to klog
-  for real "printing" to kmsg (IF LOG_LOC not defined or used)
-*/
-int logwarn(char *warning)
-{
- char *warn = malloc(256);
-  strcpy(warn ,"Warning!: ");
-  strcat(warn ,warning);
- int ret = klog(warn) ;
-  return(ret);
-  free(warn);
- }
-  /*
-    This functions prefixes the Error label
-    to the real message and sends it to klog
-    for real "printing" to kmsg (IF LOG_LOC not defined or used)
-  */
-int logerror(char *error_msg)
-{
- char *error = malloc(256);
-  strcpy(error,"Error!: ");
-  strcat(error,error_msg);
- int ret = klog(error);
-  return(ret);
-  free(error);
- }
-  /*
-    This functions prefixes the debug label
-    to the real message and sends it to klog
-    for real "printing" to kmsg (IF LOG_LOC not defined or used)
-  */
-int logdebug (char *debug_msg)
-{
- char *debug = malloc(256);
-  strcpy(debug,"Error!: ");
-  strcat(debug,debug_msg);
- int ret = klog(debug);
-  return(ret);
-  free(debug);
- }
-  /*
-    This functions prefixes the Info label
-    to the real message and sends it to klog
-    for real "printing" to kmsg (IF LOG_LOC not defined or used)
-  */
-int loginfo (char *info_msg)
-{
- char *info = malloc(256);
-  strcpy(info,"Error!: ");
-  strcat(info,info_msg);
- int ret = klog(info);
-  return(ret);
-  free(info);
- }
