@@ -28,27 +28,27 @@ int klog(int level, char *msg)
 {
 
  int ret = -1;
- char tag [256];
+ char buf [256];
 
  int outbuf = open("/dev/kmsg", O_WRONLY);
   if (outbuf > 0)
   {
     switch (level)
      {
-      case 0 : tag = "Info :" ;
-                strcat(tag,msg);
+      case 0 : buf = "Info :" ;
+                strcat(buf,msg);
                 break ;
 
-      case 1 : tag = "Warn :";
-                strcat(tag,msg);
+      case 1 : buf = "Warn :";
+                strcat(buf,msg);
               break ;
-      case 2 : tag = "Error :"
-                strcat(tag,msg);
+      case 2 : buf = "Error :"
+                strcat(buf,msg);
               break ;
-      case 3 : tag = "Debug :"
-                strcat(tag,msg);
+      case 3 : buf = "Debug :"
+                strcat(buf,msg);
               break ;
-      default : tag = "Error : Unknown log level "
+      default : buf = "Error : Unknown log level "
                 break;
     }
 
@@ -61,10 +61,10 @@ int klog(int level, char *msg)
 		* TODO: Make better file checks.
 		*/
 	  outbuf = open(LOG_LOC, O_APPEND);
-      strcpy(tag,"COULD NOT OPEN KMSG PLEASE FIX");
+      strcpy(buf,"COULD NOT OPEN KMSG PLEASE FIX");
     }
   }
-	ret = write(outbuf, tag, strlen(tag) );
+	ret = write(outbuf, buf, strlen(buf) );
 	close(outbuf);
 
 	return ret;
