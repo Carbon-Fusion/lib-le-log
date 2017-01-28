@@ -32,51 +32,8 @@ int klog(int level, char *msg)
 
  int outbuf = open("/dev/kmsg", O_WRONLY);
   if (outbuf > 0)
-  {
-    switch (level)
-     {
-      case 0 :
-              #ifdef LOG_WRAP_TAGS
-                  strcpy(buf,"I:");
-                  strcat(buf,msg);
-              #else
-                  strcpy(buf,"Info :");
-                  strcat(buf,msg);
-              #endif
-
-      case 1 :
-              #ifdef LOG_WRAP_TAGS
-                  strcpy(buf,"W:");
-                  strcat(buf,msg);
-              #else
-                  strcpy(buf,"Warn :");
-                  strcat(buf,msg);
-              #endif
-
-      case 2 :
-              #ifdef LOG_WRAP_TAGS
-                  strcpy(buf,"E:");
-                  strcat(buf,msg);
-              #else
-                  strcpy(buf,"Error:");
-                  strcat(buf,msg);
-              #endif
-
-      case 3 :
-              #ifdef LOG_WRAP_TAGS
-                  strcpy(buf,"D:");
-                  strcat(buf,msg);
-              #else
-                  strcpy(buf,"Debug:");
-                  strcat(buf,msg);
-              #endif
-              break ;
-      default : strcpy(buf,"Error : Unknown log level ");
-                break;
-    }
-
-
-  } else {
+      ;
+   else {
     if (access(LOG_LOC, F_OK ) == -1) {
       outbuf = open(LOG_LOC, O_CREAT | O_WRONLY);
     } else {
@@ -87,6 +44,47 @@ int klog(int level, char *msg)
       strcpy(buf,"COULD NOT OPEN KMSG PLEASE FIX");
     }
   }
+  switch (level)
+   {
+    case 0 :
+            #ifdef LOG_WRAP_TAGS
+                strcpy(buf,"I:");
+                strcat(buf,msg);
+            #else
+                strcpy(buf,"Info :");
+                strcat(buf,msg);
+            #endif
+
+    case 1 :
+            #ifdef LOG_WRAP_TAGS
+                strcpy(buf,"W:");
+                strcat(buf,msg);
+            #else
+                strcpy(buf,"Warn :");
+                strcat(buf,msg);
+            #endif
+
+    case 2 :
+            #ifdef LOG_WRAP_TAGS
+                strcpy(buf,"E:");
+                strcat(buf,msg);
+            #else
+                strcpy(buf,"Error:");
+                strcat(buf,msg);
+            #endif
+
+    case 3 :
+            #ifdef LOG_WRAP_TAGS
+                strcpy(buf,"D:");
+                strcat(buf,msg);
+            #else
+                strcpy(buf,"Debug:");
+                strcat(buf,msg);
+            #endif
+            break ;
+    default : strcpy(buf,"Error : Unknown log level ");
+              break;
+          }
 	ret = write(outbuf, buf, strlen(buf) );
 	close(outbuf);
 
