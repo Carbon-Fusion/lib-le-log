@@ -36,12 +36,12 @@ int klog(int level, char *msg)
  char buf [256];
 
  int outbuf = open(DEFAULT_LOG_LOC, O_WRONLY);
-  if (outbuf > 0)
+  if (outbuf > 0) // [1] Open the DEFAULT_LOG_LOC
       ;
-   else {
-    if (access(ALT_LOG_LOC, F_OK ) == -1) {
-      outbuf = open(ALT_LOG_LOC, O_CREAT | O_WRONLY);
-    } else {
+   else { // IF we cant open the DEFAULT_LOG_LOC
+    if (access(ALT_LOG_LOC, F_OK ) == -1) { //Check for ALT_LOG_LOC
+      outbuf = open(ALT_LOG_LOC, O_CREAT | O_WRONLY); //IF not create one and open it for reading
+    } else { // if ALT_LOG_LOC exists then open it to O_APPEND
 		/*
 		* TODO: Make better file checks.
 		*/
