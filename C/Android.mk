@@ -6,4 +6,7 @@ endif
 ifeq ($(DEFAULT_LOG_LOC),)
 	LOCAL_CFLAGS += -DDEFAULT_LOG_LOC=\"$(DEFAULT_LOG_LOC)\"
 endif
+ifeq ($(ALT_LOG_LOC),)
+	LOCAL_CFLAGS += -DALT_LOG_LOC=\"$(ALT_LOG_LOC)\"
+endif
 LOCAL_SRC_FILES := kmsg_log.c
