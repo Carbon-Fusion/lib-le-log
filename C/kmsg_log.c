@@ -5,6 +5,8 @@
 #include <fcntl.h>
 #include <string.h>
 
+#define MAX_MESSAGE_LEN 256
+
 #ifndef ALT_LOG_LOC
  #define ALT_LOG_LOC "/cache/lible.log"
 #endif
@@ -53,41 +55,33 @@ int klog(int level, char *msg)
    {
     case 0 :
             #ifdef LOG_WRAP_TAGS
-                strcpy(buf,"I:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","I:",msg);
             #else
-                strcpy(buf,"Info :");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Info :",msg);
             #endif
 
     case 1 :
             #ifdef LOG_WRAP_TAGS
-                strcpy(buf,"W:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","W:",msg);
             #else
-                strcpy(buf,"Warn :");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Warn :",msg);
             #endif
 
     case 2 :
             #ifdef LOG_WRAP_TAGS
-                strcpy(buf,"E:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","E:",msg);
             #else
-                strcpy(buf,"Error:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Error :",msg);
             #endif
 
     case 3 :
             #ifdef LOG_WRAP_TAGS
-                strcpy(buf,"D:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","D:",msg);
             #else
-                strcpy(buf,"Debug:");
-                strcat(buf,msg);
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Debug :",msg);;
             #endif
             break ;
-    default : strcpy(buf,"Error : Unknown log level ");
+    default : snprintf(buf,MAX_MESSAGE_LEN, "%s","Error : Unknown log level");
               break;
           }
 	ret = write(outbuf, buf, strlen(buf) );
