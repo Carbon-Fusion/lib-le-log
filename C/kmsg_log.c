@@ -4,16 +4,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include "kmsg_log.h"
 
-#define MAX_MESSAGE_LEN 256
-
-#ifndef ALT_LOG_LOC
- #define ALT_LOG_LOC "/cache/lible.log"
-#endif
-
-#ifndef DEFAULT_LOG_LOC
-  #define  DEFAULT_LOG_LOC "/dev/kmsg"
-#endif
 
 /*
   This is the main function "klog"
@@ -54,33 +46,17 @@ int klog(int level, char *msg)
   switch (level)
    {
     case 0 :
-            #ifdef LOG_WRAP_TAGS
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","I:",msg);
-            #else
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Info :",msg);
-            #endif
-
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s",INFO,msg);
+                break ;
     case 1 :
-            #ifdef LOG_WRAP_TAGS
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","W:",msg);
-            #else
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Warn :",msg);
-            #endif
-
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s",WARN,msg);
+                break ;
     case 2 :
-            #ifdef LOG_WRAP_TAGS
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","E:",msg);
-            #else
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Error :",msg);
-            #endif
-
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s",ERROR,msg);
+                break;
     case 3 :
-            #ifdef LOG_WRAP_TAGS
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","D:",msg);
-            #else
-                snprintf(buf,MAX_MESSAGE_LEN, "%s%s","Debug :",msg);;
-            #endif
-            break ;
+                snprintf(buf,MAX_MESSAGE_LEN, "%s%s",DEBUG,msg);
+                break ;
     default : snprintf(buf,MAX_MESSAGE_LEN, "%s","Error : Unknown log level");
               break;
           }
