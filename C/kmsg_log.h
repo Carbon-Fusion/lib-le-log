@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int klog(int level, char *msg);
 
 #define MAX_MESSAGE_LEN 256
@@ -20,4 +24,8 @@ int klog(int level, char *msg);
   #define WARN "Warn :"
   #define ERROR "Error :"
   #define DEBUG "Debug :"
-#endif 
+#endif
+
+#ifdef __cplusplus
+}
+#endif
